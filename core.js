@@ -1,6 +1,18 @@
 const fs = require('fs');
 const request = require('request');
-const mapping = require('./mapping.js');
+const mappingData = require('./mapping.json');
+
+const mapping = (code = '') => {
+  const allowedLocal = Object.keys(mappingData)
+    .filter(data => data === code
+      .replace('_','-')
+      .toLowerCase()
+    );
+  if (allowedLocal) {
+    return mappingData[allowedLocal];
+  }
+  return 'en';
+};
 
 const download = (uri, filename, callback) => {
   request.head(uri, (err, res, body) => {
@@ -26,7 +38,7 @@ const writeFile = (path, data) => {
 };
 
 module.exports = {
-  localMap: mapping.local,
+  mapping,
   download,
   checkFolderExistIfNotCreate,
   readFile,

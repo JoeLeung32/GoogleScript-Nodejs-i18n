@@ -2,13 +2,10 @@ require('dotenv').config();
 
 const core = require('./core.js');
 
-const SAVE_AS = `${process.env.SAVE_FOLDER}all.json`;
-const SAVE_AS_LANG = `${process.env.SAVE_FOLDER}**.json`;
-
 core.checkFolderExistIfNotCreate(process.env.SAVE_FOLDER);
 
-core.download(process.env.DOWNLOAD_TARGET, SAVE_AS, () => {
-  core.readFile(SAVE_AS, (data) => {
+core.download(process.env.DOWNLOAD_TARGET, process.env.SAVE_AS_ALL, () => {
+  core.readFile(process.env.SAVE_AS_ALL, (data) => {
     const localeObject = {};
     const { locale = {} } = JSON.parse(data);
 
@@ -18,7 +15,7 @@ core.download(process.env.DOWNLOAD_TARGET, SAVE_AS, () => {
         const code = itemData.i;
         delete (itemData.i);
         Object.keys(itemData).forEach((localeKey) => {
-          const langKey = core.localMap(localeKey);
+          const langKey = core.mapping(localeKey);
           if (typeof localeObject[langKey] === 'undefined') {
             localeObject[langKey] = {};
           }
@@ -32,7 +29,7 @@ core.download(process.env.DOWNLOAD_TARGET, SAVE_AS, () => {
     if (localeObject) {
       Object.keys(localeObject).forEach((key) => {
         const JSONData = JSON.stringify(localeObject[key]);
-        const save = SAVE_AS_LANG.replace('**', key);
+        const save = process.env.SAVE_AS_OTH.replace('**', key);
         core.writeFile(save, JSONData);
       });
     }
