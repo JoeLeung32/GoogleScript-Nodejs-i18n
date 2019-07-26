@@ -5,9 +5,8 @@ const mappingData = require('./mapping.json');
 const mapping = (code = '') => {
   const allowedLocal = Object.keys(mappingData)
     .filter(data => data === code
-      .replace('_','-')
-      .toLowerCase()
-    );
+      .replace('_', '-')
+      .toLowerCase());
   if (allowedLocal) {
     return mappingData[allowedLocal];
   }
@@ -15,8 +14,11 @@ const mapping = (code = '') => {
 };
 
 const download = (uri, filename, callback) => {
-  request.head(uri, (err, res, body) => {
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  // request.head(uri, (err, res, body) => {
+  request.head(uri, () => {
+    request(uri)
+      .pipe(fs.createWriteStream(filename))
+      .on('close', callback);
   });
 };
 
@@ -42,5 +44,5 @@ module.exports = {
   download,
   checkFolderExistIfNotCreate,
   readFile,
-  writeFile
+  writeFile,
 };

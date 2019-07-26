@@ -10,7 +10,7 @@ core.download(process.env.DOWNLOAD_TARGET, process.env.SAVE_AS_ALL, () => {
     const { locale = {} } = JSON.parse(data);
 
     if (locale) {
-      locale.map((item) => {
+      locale.forEach((item) => {
         const itemData = item;
         const code = itemData.i;
         delete (itemData.i);
